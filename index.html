@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberInvest Pro - Final Version</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" defer></script>
+    <script src="./script.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ CyberInvest Pro</h1>
+        </div>
+
+        <nav class="navigation">
+            <button class="nav-btn" onclick="showSection('dashboard', this)">Dashboard</button>
+            <button class="nav-btn" onclick="showSection('inventory-risk', this)">AI Optimization</button>
+            <button class="nav-btn" onclick="showSection('about-me', this)">About</button>
+        </nav>
+
+        <div id="dashboard" class="content-section">
+            <h3>Cybersecurity Investment Dashboard</h3>
+            <p style="text-align: center; color: #94a3b8; margin-bottom: 20px;">This dashboard displays the results from
+                your most recent AI analysis.</p>
+            <div class="dashboard-grid">
+                <div id="card-assets" class="card metric-card metric-clickable">
+                    <div class="metric-title">High-Risk Assets Addressed</div>
+                    <div id="metric-assets" class="metric-value">0</div>
+                </div>
+                <div id="card-risk" class="card metric-card metric-clickable">
+                    <div class="metric-title">New Risk Score</div>
+                    <div id="metric-risk" class="metric-value">0</div>
+                </div>
+                <div id="card-threats" class="card metric-card metric-clickable">
+                    <div class="metric-title">Projected Incident Reduction</div>
+                    <div id="metric-threats" class="metric-value">0%</div>
+                </div>
+                <div id="card-rosi" class="card metric-card metric-clickable">
+                    <div class="metric-title">Return on Investment (ROSI)</div>
+                    <div id="metric-rosi" class="metric-value">0%</div>
+                </div>
+                <div id="card-compliance" class="card metric-card metric-clickable">
+                    <div class="metric-title">Compliance Uplift</div>
+                    <div id="metric-compliance" class="metric-value">0%</div>
+                </div>
+                <div id="card-budget" class="card metric-card metric-clickable">
+                    <div class="metric-title">New Budget</div>
+                    <div id="metric-budget" class="metric-value">£0k</div>
+                </div>
+                <div id="card-exposure" class="card metric-card metric-clickable">
+                    <div class="metric-title">Threat Exposure Reduction</div>
+                    <div id="metric-exposure" class="metric-value">0%</div>
+                </div>
+                <div id="card-attr" class="card metric-card metric-clickable">
+                    <div class="metric-title">ATTR Improvement</div>
+                    <div id="metric-attr" class="metric-value">0%</div>
+                </div>
+                <div id="card-maturity" class="card metric-card metric-clickable">
+                    <div class="metric-title">Security Maturity Level</div>
+                    <div id="metric-maturity" class="metric-value">N/A</div>
+                </div>
+                <div id="card-focus" class="card metric-card metric-clickable">
+                    <div class="metric-title">Primary Focus Area</div>
+                    <div id="metric-focus" class="metric-value">N/A</div>
+                </div>
+            </div>
+            <div class="dashboard-grid" style="grid-template-columns: 2fr 1fr;">
+                <div id="card-line-chart" class="card metric-clickable">
+                    <h3>Risk Reduction Trend</h3>
+                    <div class="chart-container"><canvas id="riskReductionChart"></canvas></div>
+                </div>
+                <div id="card-pie-chart" class="card metric-clickable">
+                    <h3>Investment Allocation</h3>
+                    <div class="chart-container"><canvas id="aiAllocationChart"></canvas></div>
+                </div>
+            </div>
+
+            <div id="risk-assessment-section" class="card" style="margin-top: 20px; text-align: center; display: none;">
+                <h3>Predictive Risk Assessment</h3>
+                <p style="color: #94a3b8; margin: 10px auto 20px auto; max-width: 600px;">Run this after a Detailed
+                    Analysis to predict future risks based on the recommended investment plan.</p>
+                <div class="tooltip-wrapper">
+                    <button class="btn" id="run-risk-analysis-btn" disabled>Run Risk Assessment</button>
+                    <span class="tooltip-text">Run 'Analyse' first to enable this feature.</span>
+                </div>
+                <div id="risk-analysis-results" class="dashboard-grid" style="margin-top: 20px; text-align: left;">
+                </div>
+            </div>
+        </div>
+
+        <div id="inventory-risk" class="content-section">
+            <div class="card">
+                <div class="form-group inventory-toggle-group">
+                    <label class="switch">
+                        <input type="checkbox" id="use-inventory-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <label for="use-inventory-toggle">Use Custom Asset Inventory for Analysis</label>
+                </div>
+            </div>
+            <div class="card" id="asset-inventory-card" style="margin-top: 20px; display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Asset Inventory</h3><button class="btn" id="add-asset-btn">+ Add Asset</button>
+                </div>
+                <div class="dashboard-grid" style="margin-top: 20px; margin-bottom: 20px;">
+                    <div class="card metric-card">
+                        <div class="metric-title">Total Assets</div>
+                        <div id="total-assets-summary" class="metric-value">0</div>
+                    </div>
+                    <div class="card metric-card">
+                        <div class="metric-title">High Importance (&gt;3)</div>
+                        <div id="high-importance-summary" class="metric-value">0</div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="asset-table">
+                        <thead>
+                            <tr>
+                                <th>Asset Name</th>
+                                <th>Type</th>
+                                <th>Importance (0-5)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="asset-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 20px;">
+                <h3>Detailed Analysis</h3>
+                <p style="color: #94a3b8; margin-bottom: 20px;">Use the questions below for a granular plan. Check the
+                    box above to include your asset inventory.</p>
+                <div class="form-group"><label>Annual Security Budget (£)</label><input type="number"
+                        id="detailed-budget" value="750000"></div>
+                <div class="form-group"><label>Industry Sector</label><select id="detailed-industry">
+                        <option selected>Manufacturing</option>
+                        <option>Financial Services</option>
+                        <option>Healthcare</option>
+                        <option>Technology</option>
+                        <option>Retail</option>
+                    </select></div>
+                <div class="form-group"><label>Number of Employees</label><select id="detailed-companySize">
+                        <option>1-50</option>
+                        <option selected>51-250</option>
+                        <option>251-1000</option>
+                        <option>1001+</option>
+                    </select></div>
+                <div class="form-group"><label>Primary Security Goal</label><select id="detailed-primaryGoal">
+                        <option selected>Protect sensitive data and intellectual property from theft.</option>
+                        <option>Ensure high availability and prevent operational downtime.</option>
+                        <option>Meet and maintain strict regulatory compliance standards.</option>
+                    </select></div>
+                <button class="btn" id="run-detailed-analysis-btn">🔬 Analyse</button>
+            </div>
+        </div>
+
+        <div id="about-me" class="content-section">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-badge">🚀 AI-Powered Cybersecurity</div>
+                    <h1 class="hero-title">CyberInvest Pro</h1>
+                    <p class="hero-subtitle">Intelligent cybersecurity investment optimization powered by advanced AI
+                        analytics</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">100+</div>
+                            <div class="stat-label">Risk Factors Analyzed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">NIST Framework Areas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">AI</div>
+                            <div class="stat-label">Powered Analysis</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>🛡️ Project Overview</h2>
+                <p>Revolutionizing cybersecurity investment decisions through intelligent automation</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Smart Analysis</h3>
+                    <p>AI-driven analysis of your organization's unique cybersecurity landscape, considering budget,
+                        industry, and critical assets.</p>
+                    <div class="feature-tags">
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag">Risk Assessment</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Predictive Insights</h3>
+                    <p>Advanced predictive modeling to forecast future risks and optimize investment allocation across
+                        security domains.</p>
+                    <div class="feature-tags">
+                        <span class="tag">Forecasting</span>
+                        <span class="tag">ROI Analysis</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-time Dashboard</h3>
+                    <p>Interactive dashboards with real-time metrics, trend analysis, and actionable recommendations for
+                        immediate implementation.</p>
+                    <div class="feature-tags">
+                        <span class="tag">Live Data</span>
+                        <span class="tag">Visualization</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>👨‍💻 Meet the Creator</h2>
+                <p>Passionate about cybersecurity innovation and AI-driven solutions</p>
+            </div>
+
+            <div class="creator-spotlight">
+                <div class="creator-card">
+                    <div class="creator-header">
+                        <div class="creator-avatar">🎓</div>
+                        <div class="creator-info">
+                            <h2>Abhishek Aggarwal</h2>
+                            <p class="creator-title">MSc Cybersecurity Analytics Student</p>
+                            <p class="creator-location">📍 University of Exeter, UK</p>
+                            <div class="creator-links">
+                                <a href="mailto:aa1587@exeter.ac.uk" class="contact-link">📧 Email</a>
+                                <a href="https://www.linkedin.com/in/abhishek-aggarwal-1762b9261/" target="_blank"
+                                    class="contact-link">💼 LinkedIn</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="creator-bio">
+                        <p>A dedicated cybersecurity professional with expertise in threat analysis, ethical hacking,
+                            and AI-driven security solutions. Passionate about bridging the gap between academic
+                            research and practical industry applications.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlights-section">
+                <h3>🏆 Professional Highlights</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">🔬</div>
+                        <div class="timeline-content">
+                            <h4>Student Researcher</h4>
+                            <p class="timeline-company">University of Exeter, UK</p>
+                            <p class="timeline-date">April 2025 – Present</p>
+                            <p>Leading paid research on entrepreneurship programme inclusivity, developing actionable
+                                strategies for enhanced participation across diverse student populations.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">🎤</div>
+                        <div class="timeline-content">
+                            <h4>Keynote Speaker</h4>
+                            <p class="timeline-company">BSides Exeter Conference</p>
+                            <p class="timeline-date">June 2025</p>
+                            <p>Delivered keynote presentation on "Analyzing the Impact of Spectre and Meltdown
+                                Vulnerabilities on Modern Computing" to industry professionals.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">🚀</div>
+                        <div class="timeline-content">
+                            <h4>Cybersecurity Venture Founder</h4>
+                            <p class="timeline-company">Student Startups Exeter</p>
+                            <p class="timeline-date">May 2025</p>
+                            <p>Awarded Market Validation Grant for innovative cybersecurity venture, focusing on
+                                AI-driven security solutions for SMEs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🎓 Education</h3>
+                    <div class="education-item">
+                        <h4>MSc Cyber-Security Analytics</h4>
+                        <p class="education-school">University of Exeter, UK</p>
+                        <p class="education-year">2024 – 2025</p>
+                        <div class="education-grade">Projected 2:1</div>
+                    </div>
+                    <div class="education-item">
+                        <h4>Bachelor of Vocation in Hardware and Networking</h4>
+                        <p class="education-school">Punjab University, India</p>
+                        <p class="education-year">2020 – 2023</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>💻 Technical Expertise</h3>
+                    <div class="skills-category">
+                        <h4>🔒 Cybersecurity</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Ethical Hacking</span>
+                            <span class="skill-tag">Penetration Testing</span>
+                            <span class="skill-tag">Threat Management</span>
+                            <span class="skill-tag">CC (ISC)²</span>
+                            <span class="skill-tag">Nmap</span>
+                            <span class="skill-tag">Metasploit</span>
+                        </div>
+                    </div>
+                    <div class="skills-category">
+                        <h4>🌐 Networking</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Cisco IOS</span>
+                            <span class="skill-tag">TCP/IP</span>
+                            <span class="skill-tag">VPN</span>
+                            <span class="skill-tag">Firewall Config</span>
+                            <span class="skill-tag">ACL/NAT</span>
+                        </div>
+                    </div>
+                    <div class="skills-category">
+                        <h4>⚡ Programming</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">C++</span>
+                            <span class="skill-tag">SQL</span>
+                            <span class="skill-tag">HTML/CSS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3>Ready to Optimize Your Cybersecurity Investments?</h3>
+                <p>Experience the power of AI-driven cybersecurity analysis</p>
+                <button class="cta-button"
+                    onclick="showSection('inventory-risk', document.querySelector('.nav-btn:nth-child(2)'))">
+                    🚀 Try CyberInvest Pro
+                </button>
+            </div>
+        </div>
+
+        <div id="ai-results-container" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>AI is analyzing...</p>
+            <button id="cancel-analysis-btn" class="btn btn-cancel">Cancel</button>
+        </div>
+
+        <div id="explanation-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h3 id="modal-title">Metric Explanation</h3>
+                <p id="modal-text">Details about the metric...</p>
+                <div id="modal-details-content" style="display: none;"></div>
+                <button id="modal-close-btn" class="btn">Close</button>
+            </div>
+        </div>
+
+        <div id="details-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h3 id="details-modal-title">Details</h3>
+                <div id="details-modal-text"></div>
+                <button id="details-modal-close-btn" class="btn">Close</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
